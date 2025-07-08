@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "SearchEnginesExtension (Package)": {
+      "commandName": "MsixPackage",
+      "doNotLaunchApp": true
+    },
+    "SearchEnginesExtension (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
