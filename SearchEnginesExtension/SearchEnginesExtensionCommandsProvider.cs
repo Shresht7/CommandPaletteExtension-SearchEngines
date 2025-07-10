@@ -14,7 +14,7 @@ public partial class SearchEnginesExtensionCommandsProvider : CommandProvider
     public SearchEnginesExtensionCommandsProvider()
     {
         DisplayName = "SearchEnginesExtension";
-        Icon = IconHelpers.FromRelativePath("Assets\\StoreLogo.png");
+        Icon = Icons.WebSearch;
         _commands = [
             new CommandItem(new SearchEnginesExtensionPage()) { Title = DisplayName },
         ];

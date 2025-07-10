@@ -19,7 +19,7 @@ internal sealed partial class SearchEnginesExtensionPage : ListPage
 
     public SearchEnginesExtensionPage()
     {
-        Icon = IconHelpers.FromRelativePath("Assets\\StoreLogo.png");
+        Icon = Icons.WebSearch;
         Title = "SearchEnginesExtension";
         Name = "Open";
     }
@@ -30,7 +30,7 @@ internal sealed partial class SearchEnginesExtensionPage : ListPage
         {
             Title = engine.Name,
             Subtitle = $"Search using {engine.Name}",
-            Icon = IconHelpers.FromRelativePath("Assets\\SearchIcon.png"),
+            Icon = Icons.WebSearch,
         }).ToArray();
     }
 }
