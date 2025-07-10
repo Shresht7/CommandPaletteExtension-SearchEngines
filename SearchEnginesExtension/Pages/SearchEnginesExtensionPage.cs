@@ -20,7 +20,7 @@ internal sealed partial class SearchEnginesExtensionPage : ListPage
     public SearchEnginesExtensionPage()
     {
         Icon = Icons.WebSearch;
-        Title = "SearchEnginesExtension";
+        Title = "Search Engines";
         Name = "Open";
     }
 

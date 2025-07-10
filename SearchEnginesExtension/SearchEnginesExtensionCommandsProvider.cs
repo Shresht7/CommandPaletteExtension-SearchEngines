@@ -13,7 +13,7 @@ public partial class SearchEnginesExtensionCommandsProvider : CommandProvider
 
     public SearchEnginesExtensionCommandsProvider()
     {
-        DisplayName = "SearchEnginesExtension";
+        DisplayName = "Search Engines";
         Icon = Icons.WebSearch;
         _commands = [
             new CommandItem(new SearchEnginesExtensionPage()) { Title = DisplayName },
