@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Text.Json.Serialization;
+
 namespace SearchEnginesExtension
 {
-    internal class SearchEngine
+    internal sealed class SearchEngine
     {
         public required string Name { get; set; }
 
@@ -14,4 +16,13 @@ namespace SearchEnginesExtension
 
         public required string Shortcut { get; set; }
     }
+
+    [JsonSourceGenerationOptions(
+        IncludeFields = true,
+        PropertyNameCaseInsensitive = true,
+        WriteIndented = true
+    )]
+    [JsonSerializable(typeof(SearchEngine))]
+    [JsonSerializable(typeof(List<SearchEngine>))]
+    internal sealed partial class SearchEngineJsonSearializerContext : JsonSerializerContext { }
 }

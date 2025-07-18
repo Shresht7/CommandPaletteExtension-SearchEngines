@@ -10,18 +10,14 @@ namespace SearchEnginesExtension;
 
 internal sealed partial class SearchEnginesExtensionPage : ListPage
 {
-    private List<SearchEngine> searchEngines = new()
-    {
-        new SearchEngine { Name = "Google", Url = "https://www.google.com/search?q=", Shortcut = "google" },
-        new SearchEngine { Name = "Bing", Url = "https://www.bing.com/search?q=", Shortcut = "bing" },
-        new SearchEngine { Name = "DuckDuckGo", Url = "https://duckduckgo.com/?q=", Shortcut = "duckduckgo" },
-    };
+    private List<SearchEngine> searchEngines;
 
     public SearchEnginesExtensionPage()
     {
         Icon = Icons.WebSearch;
         Title = "Search Engines";
         Name = "Open";
+        searchEngines = Configuration.Load();
     }
 
     public override IListItem[] GetItems()
