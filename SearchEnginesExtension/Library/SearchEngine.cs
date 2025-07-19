@@ -8,12 +8,24 @@ using System.Net;
 
 namespace SearchEnginesExtension
 {
+    /// <summary>
+    /// Represents a search engine with its name, URL, and shortcut
+    /// </summary>
     internal sealed class SearchEngine
     {
+        /// <summary>
+        /// Gets or sets the name of the search engine
+        /// </summary>
         public required string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the URL of the search engine. The URL should contain "%s" as a placeholder for the search query
+        /// </summary>
         public required string Url { get; set; }
 
+        /// <summary>
+        /// Gets or sets the shortcut for the search engine
+        /// </summary>
         public required string Shortcut { get; set; }
 
         /// <summary>
