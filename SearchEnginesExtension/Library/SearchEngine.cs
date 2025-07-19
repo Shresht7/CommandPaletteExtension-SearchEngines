@@ -9,27 +9,27 @@ using System.Net;
 namespace SearchEnginesExtension
 {
     /// <summary>
-    /// Represents a search engine with its name, URL, and shortcut
+    /// Represents a Search Engine
     /// </summary>
     internal sealed class SearchEngine
     {
         /// <summary>
-        /// Gets or sets the name of the search engine
+        /// Display name of the search engine
         /// </summary>
         public required string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the URL of the search engine. The URL should contain "%s" as a placeholder for the search query
+        /// URL to perform the search. The URL should contain "%s" as a placeholder for the search query
         /// </summary>
         public required string Url { get; set; }
 
         /// <summary>
-        /// Gets or sets the shortcut for the search engine
+        /// Shortcut keyword to trigger the search
         /// </summary>
         public required string Shortcut { get; set; }
 
         /// <summary>
-        /// Gets or sets the URL of the favicon for the search engine.
+        /// Favicon URL of the search engine
         /// </summary>
         public string? FaviconUrl { get; set; }
 

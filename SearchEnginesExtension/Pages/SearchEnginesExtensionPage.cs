@@ -52,9 +52,7 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
                     Title = engine.Name,
                     Subtitle = $"Search using {engine.Name}",
                     Icon = string.IsNullOrEmpty(engine.FaviconUrl) ? Icons.WebSearch : new IconInfo(engine.FaviconUrl),
-                    Tags = [
-                        new Tag($"!{engine.Shortcut}")
-                    ]
+                    Tags = [new Tag($"!{engine.Shortcut}")]
                 };
             }).ToArray();
         }
@@ -126,9 +124,7 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
                     Title = engine.Name,
                     Subtitle = searchUrl,
                     Icon = string.IsNullOrEmpty(engine.FaviconUrl) ? Icons.WebSearch : new IconInfo(engine.FaviconUrl),
-                    Tags = [
-                        new Tag($"!{engine.Shortcut}")
-                    ]
+                    Tags = [new Tag($"!{engine.Shortcut}")]
                 };
             })
             .ToList();
