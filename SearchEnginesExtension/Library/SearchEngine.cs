@@ -47,7 +47,14 @@ namespace SearchEnginesExtension
             {
                 foreach (var param in additionalParams)
                 {
-                    searchUrl += $"&{WebUtility.UrlEncode(param.Key)}={WebUtility.UrlEncode(param.Value)}";
+                    if (string.IsNullOrEmpty(param.Value))
+                    {
+                        searchUrl += $"&{WebUtility.UrlEncode(param.Key)}";
+                    }
+                    else
+                    {
+                        searchUrl += $"&{WebUtility.UrlEncode(param.Key)}={WebUtility.UrlEncode(param.Value)}";
+                    }
                 }
             }
 

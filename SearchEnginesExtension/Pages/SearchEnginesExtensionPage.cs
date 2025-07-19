@@ -82,8 +82,8 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
         var queryWords = newSearch.Split(' ').ToList();
         var additionalParams = new Dictionary<string, string>();
 
-        // Regex to find key:value pairs
-        var paramRegex = new Regex(@"^([a-zA-Z0-9_]+):(.+)$");
+        // Regex to find &key=value or &key pairs
+        var paramRegex = new Regex(@"&([a-zA-Z0-9_]+)(?:=(.+))?$");
         var wordsToRemove = new List<string>();
 
         foreach (var word in queryWords)
@@ -91,7 +91,9 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
             var match = paramRegex.Match(word);
             if (match.Success)
             {
-                additionalParams[match.Groups[1].Value] = match.Groups[2].Value;
+                var key = match.Groups[1].Value;
+                var value = match.Groups.Count > 2 && match.Groups[2].Success ? match.Groups[2].Value : string.Empty;
+                additionalParams[key] = value;
                 wordsToRemove.Add(word);
             }
         }
