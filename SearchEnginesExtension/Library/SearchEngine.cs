@@ -38,10 +38,19 @@ namespace SearchEnginesExtension
         /// </summary>
         /// <param name="query">The thing to search for</param>
         /// <returns>A URL formatted for the search engine</returns>
-        public string Search(string query)
+        public string Search(string query, Dictionary<string, string>? additionalParams = null)
         {
             var encodedQuery = WebUtility.UrlEncode(query);
             var searchUrl = Url.Replace("%s", encodedQuery);
+
+            if (additionalParams != null)
+            {
+                foreach (var param in additionalParams)
+                {
+                    searchUrl += $"&{WebUtility.UrlEncode(param.Key)}={WebUtility.UrlEncode(param.Value)}";
+                }
+            }
+
             return searchUrl;
         }
     }

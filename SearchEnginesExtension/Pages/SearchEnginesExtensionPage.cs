@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Microsoft.CommandPalette.Extensions;
 using Microsoft.CommandPalette.Extensions.Toolkit;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace SearchEnginesExtension;
 
@@ -78,7 +79,28 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
         }
 
         // Split the search query into individual words.
-        var queryWords = newSearch.Split(' ');
+        var queryWords = newSearch.Split(' ').ToList();
+        var additionalParams = new Dictionary<string, string>();
+
+        // Regex to find key:value pairs
+        var paramRegex = new Regex(@"^([a-zA-Z0-9_]+):(.+)$");
+        var wordsToRemove = new List<string>();
+
+        foreach (var word in queryWords)
+        {
+            var match = paramRegex.Match(word);
+            if (match.Success)
+            {
+                additionalParams[match.Groups[1].Value] = match.Groups[2].Value;
+                wordsToRemove.Add(word);
+            }
+        }
+
+        // Remove extracted parameters from the query words
+        foreach (var word in wordsToRemove)
+        {
+            queryWords.Remove(word);
+        }
 
         // Find the word in the query that starts with '!', which is the shortcut.
         var shortcutWord = queryWords.FirstOrDefault(word => word.StartsWith('!'));
@@ -87,7 +109,7 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
             .Select(engine =>
             {
                 var score = 0.0;
-                var query = newSearch;
+                var query = string.Join(" ", queryWords);
 
                 // If a shortcut is found, calculate the score based on the shortcut.
                 if (shortcutWord != null)
@@ -110,15 +132,15 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
                     );
                 }
 
-                return (engine, score, query);
+                return (engine, score, query, additionalParams);
             })
             // Filter out engines with a low score.
             .Where(result => result.score > 0.2)
             .OrderByDescending(result => result.score)
             .Select(result =>
             {
-                var (engine, _, query) = result;
-                var searchUrl = engine.Search(query);
+                var (engine, _, query, paramsDict) = result;
+                var searchUrl = engine.Search(query, paramsDict);
                 return new ListItem(new OpenUrlCommand(searchUrl))
                 {
                     Title = engine.Name,
