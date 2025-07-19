@@ -21,5 +21,10 @@ namespace SearchEnginesExtension
         /// Gets the icon for settings
         /// </summary>
         public static IconInfo Settings { get; } = new IconInfo("\uE713");
+
+        /// <summary>
+        /// Gets the icon for refresh
+        /// </summary>
+        public static IconInfo Refresh { get; } = new IconInfo("\uE72C");
     }
 }

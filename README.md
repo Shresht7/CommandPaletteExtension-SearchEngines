@@ -35,6 +35,9 @@
 
 Search engines are configured in the `SearchEngines.json` file, located in `%LOCALAPPDATA%\CommandPaletteExtension-SearchEngines\`.
 
+> [!TIP]
+> To reload the configuration after making changes, you can use the "Reload Configuration" subcommand or press `Ctrl+R` when the "Search Engines" command is active.
+
 ---
 
 ## License
