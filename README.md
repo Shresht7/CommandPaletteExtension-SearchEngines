@@ -1,15 +1,15 @@
 # `SearchEngines` Extension for PowerToys Command Palette
 
 > [!CAUTION]
-> WORK-IN-PROGRESS
+> ⚠️ WORK-IN-PROGRESS ⚠️ 
 
-`SearchEngines` is an extension for the Microsoft PowerToys Command Palette that allows you to quickly search the web using search engines.
+`SearchEngines` is an extension for the [Microsoft PowerToys Command Palette](https://learn.microsoft.com/en-us/windows/powertoys/command-palette/overview) that allows you to quickly search the web using search engines.
 
 ![screenshot](./screenshot.png)
 
 ---
 
-## Features
+## 🌟 Features
 
 -   **Search Ranking:** The extension uses fuzzy matching to rank search engines based on your query. It matches against both the engine's name and its shortcut, providing more relevant results.
 
@@ -21,7 +21,7 @@
 
 -   **Easy Configuration Access:** A subcommand, "Open Configuration File," is available from the main "Search Engines" command. This allows you to quickly open the `SearchEngines.json` configuration file for edits.
 
-## Usage
+## 📖 Usage
 
 1.  **Open Command Palette:** Launch the PowerToys Command Palette.
 2.  **Activate Extension:** Type `Search Engines` and select the main command.
@@ -31,15 +31,30 @@
     *   **Custom Parameters:** Add `&key=value` or `&key` to your query for additional parameters (e.g., `my query &lang=en &strict`).
 4.  **Open Configuration:** Select the "Open Configuration File" subcommand to edit your `SearchEngines.json` file.
 
-## Configuration
+## ⚙️ Configuration
 
 Search engines are configured in the `SearchEngines.json` file, located in `%LOCALAPPDATA%\CommandPaletteExtension-SearchEngines\`.
+
+>[!TIP]
+> You can change the path of the configuration file in: `SearchEngines.jsonPowerToys Command Palette Settings` > `Extensions` > `Search Engines`
 
 > [!TIP]
 > To reload the configuration after making changes, you can use the "Reload Configuration" subcommand or press `Ctrl+R` when the "Search Engines" command is active.
 
 ---
 
-## License
+## 📦 Development
+
+### 📕 References
+
+- [Microsoft Command Palette Overview](https://learn.microsoft.com/en-us/windows/powertoys/command-palette/overview)
+- [Microsoft Command Palette Extensions](https://learn.microsoft.com/en-us/windows/powertoys/command-palette/microsoft-commandpalette-extensions/microsoft-commandpalette-extensions)
+- [Microsoft Command Palette Extensions Toolkit](https://learn.microsoft.com/en-us/windows/powertoys/command-palette/microsoft-commandpalette-extensions-toolkit/microsoft-commandpalette-extensions-toolkit)
+- [Microsoft Command Palette Extension Samples](https://learn.microsoft.com/en-us/windows/powertoys/command-palette/samples)
+- [Extension Samples on GitHub](https://github.com/microsoft/PowerToys/tree/main/src/modules/cmdpal/ext/SamplePagesExtension)
+
+---
+
+## 📄 License
 
 The project is licensed under the [MIT License](./LICENSE)
