@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 
 namespace SearchEnginesExtension
 {
@@ -87,22 +88,51 @@ namespace SearchEnginesExtension
         }
 
         /// <summary>
-        /// Attempts to find the favicon URL for a given search engine URL.
+        /// Attempts to find the favicon URL for a given search engine URL
         /// </summary>
-        /// <param name="engineUrl">The URL of the search engine.</param>
-        /// <returns>The favicon URL if found, otherwise null.</returns>
+        /// <param name="engineUrl">The URL of the search engine</param>
+        /// <returns>The favicon URL if found, otherwise null</returns>
         private static async Task<string?> GetFaviconUrlAsync(string engineUrl)
         {
             try
             {
                 var uri = new Uri(engineUrl);
                 var baseUrl = uri.GetLeftPart(UriPartial.Authority);
-                var faviconUrl = new Uri(baseUrl + "/favicon.ico");
 
-                var response = await _httpClient.GetAsync(faviconUrl);
-                response.EnsureSuccessStatusCode(); // Throws an exception if the HTTP response status is an error code
+                // Try favicon.ico first
+                var faviconIcoUrl = new Uri(baseUrl + "/favicon.ico");
+                try
+                {
+                    var response = await _httpClient.GetAsync(faviconIcoUrl);
+                    response.EnsureSuccessStatusCode();
+                    return faviconIcoUrl.ToString();
+                }
+                catch (HttpRequestException) { /* Ignore and try parsing HTML */ }
 
-                return faviconUrl.ToString();
+                // If favicon.ico not found, parse HTML
+                var htmlResponse = await _httpClient.GetAsync(baseUrl);
+                htmlResponse.EnsureSuccessStatusCode();
+                var htmlContent = await htmlResponse.Content.ReadAsStringAsync();
+
+                // Regex to find link tags for icons
+                var regex = new Regex("<link\\s+[^>]*rel=\"(?:icon|shortcut icon)\"[^>]*href=\"([^\"]*)\"[^>]*>", RegexOptions.IgnoreCase);
+                var match = regex.Match(htmlContent);
+
+                if (match.Success)
+                {
+                    var faviconPath = match.Groups[1].Value;
+                    if (Uri.IsWellFormedUriString(faviconPath, UriKind.Absolute))
+                    {
+                        return faviconPath;
+                    }
+                    else
+                    {
+                        // Handle relative URLs
+                        return new Uri(new Uri(baseUrl), faviconPath).ToString();
+                    }
+                }
+
+                return null;
             }
             catch (HttpRequestException httpEx)
             {
