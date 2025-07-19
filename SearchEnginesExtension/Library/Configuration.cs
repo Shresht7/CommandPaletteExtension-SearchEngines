@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using SearchEnginesExtension.Commands;
 
 namespace SearchEnginesExtension
 {
@@ -19,7 +20,7 @@ namespace SearchEnginesExtension
         /// <summary>
         /// Path to the JSON configuration file for search engines
         /// </summary>
-        public static readonly string FilePath = Path.Combine(
+        public static string FilePath => SearchEngineExtensionSettings.Instance.ConfigPath.Value ?? Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "CommandPaletteExtension-SearchEngines",
             "SearchEngines.json"

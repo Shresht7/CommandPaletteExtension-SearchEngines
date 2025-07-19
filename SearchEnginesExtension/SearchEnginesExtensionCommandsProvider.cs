@@ -17,6 +17,7 @@ public partial class SearchEnginesExtensionCommandsProvider : CommandProvider
     {
         DisplayName = "Search Engines";
         Icon = Icons.WebSearch;
+        Settings = SearchEngineExtensionSettings.Instance.Settings;
         _commands = [
             new CommandItem(new SearchEnginesExtensionPage())
             {
