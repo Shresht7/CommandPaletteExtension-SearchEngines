@@ -60,6 +60,16 @@ namespace SearchEnginesExtension
 
             return searchUrl;
         }
+
+        /// <summary>
+        /// Generates the homepage URL for this search engine.
+        /// </summary>
+        /// <returns>A correctly formed homepage URL.</returns>
+        public string GetHomepageUrl()
+        {
+            var uriBuilder = new UriBuilder(Url);
+            return $"https://{uriBuilder.Host}";
+        }
     }
 
     [JsonSourceGenerationOptions(

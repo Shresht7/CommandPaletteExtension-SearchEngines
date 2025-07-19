@@ -47,7 +47,7 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
         else
         {
             return Configuration.SearchEngines.ConvertAll(engine => {
-                string homeUrl = engine.Url.Replace("%s", "");
+                string homeUrl = engine.GetHomepageUrl();
                 return new ListItem(new OpenUrlCommand(homeUrl))
                 {
                     Title = engine.Name,
