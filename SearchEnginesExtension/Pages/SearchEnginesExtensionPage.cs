@@ -10,19 +10,17 @@ namespace SearchEnginesExtension;
 
 internal sealed partial class SearchEnginesExtensionPage : ListPage
 {
-    private List<SearchEngine> searchEngines;
-
     public SearchEnginesExtensionPage()
     {
         Icon = Icons.WebSearch;
         Title = "Search Engines";
         Name = "Open";
-        searchEngines = Configuration.Load();
+        Configuration.Load();
     }
 
     public override IListItem[] GetItems()
     {
-        return searchEngines.ConvertAll(engine => new ListItem(new OpenUrlCommand($"{engine.Url}"))
+        return Configuration.SearchEngines.ConvertAll(engine => new ListItem(new OpenUrlCommand($"{engine.Url}"))
         {
             Title = engine.Name,
             Subtitle = $"Search using {engine.Name}",
