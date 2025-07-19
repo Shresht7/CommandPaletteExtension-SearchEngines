@@ -82,7 +82,7 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
 
             // Fuzzy search for the shortcut and order by the score
             items = Configuration.SearchEngines
-                .Select(engine => (engine, score: StringMatcher.FuzzySearch(shortcut, engine.Shortcut).Score))
+                .Select(engine => (engine, score: System.Math.Max(StringMatcher.FuzzySearch(shortcut, engine.Shortcut).Score, StringMatcher.FuzzySearch(shortcut, engine.Name).Score)))
                 .Where(result => result.score > 0)
                 .OrderByDescending(result => result.score)
                 .Select(result =>
