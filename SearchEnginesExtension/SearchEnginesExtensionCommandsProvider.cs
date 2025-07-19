@@ -4,6 +4,7 @@
 
 using Microsoft.CommandPalette.Extensions;
 using Microsoft.CommandPalette.Extensions.Toolkit;
+using SearchEnginesExtension.Commands;
 
 namespace SearchEnginesExtension;
 
@@ -16,7 +17,13 @@ public partial class SearchEnginesExtensionCommandsProvider : CommandProvider
         DisplayName = "Search Engines";
         Icon = Icons.WebSearch;
         _commands = [
-            new CommandItem(new SearchEnginesExtensionPage()) { Title = DisplayName },
+            new CommandItem(new SearchEnginesExtensionPage())
+            {
+                Title = DisplayName,
+                MoreCommands = [
+                    new CommandContextItem(new OpenConfigurationCommand())
+                ]
+            },
         ];
     }
 

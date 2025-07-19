@@ -16,5 +16,10 @@ namespace SearchEnginesExtension
         /// Gets the icon for web search
         /// </summary>
         public static IconInfo WebSearch { get; } = new IconInfo("\uF6FA");
+
+        /// <summary>
+        /// Gets the icon for settings
+        /// </summary>
+        public static IconInfo Settings { get; } = new IconInfo("\uE713");
     }
 }
