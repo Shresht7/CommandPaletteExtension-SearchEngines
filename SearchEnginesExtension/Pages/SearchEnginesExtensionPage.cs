@@ -76,9 +76,11 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
         // If the search text contains a shortcut, filter by the shortcut
         else if (newSearch.Contains('!'))
         {
-            // Split the search text into the shortcut and the query
-            var queryParts = newSearch.Split(' ', 2);
-            var shortcut = queryParts[0][1..];
+            // Find the shortcut in the search text (the word that starts with !)
+            var queryWords = newSearch.Split(' ');
+            var shortcutWord = queryWords.First(word => word.StartsWith('!'));
+            var shortcut = shortcutWord[1..];
+            var query = string.Join(" ", queryWords.Where(word => !word.Equals(shortcutWord, System.StringComparison.Ordinal)));
 
             // Fuzzy search for the shortcut and order by the score
             items = Configuration.SearchEngines
@@ -89,7 +91,6 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
                 {
                     // Create a new list item for the search engine
                     var engine = result.engine;
-                    var query = queryParts.Length > 1 ? queryParts[1] : string.Empty;
                     var searchUrl = engine.Search(query);
                     return new ListItem(new OpenUrlCommand(searchUrl))
                     {
