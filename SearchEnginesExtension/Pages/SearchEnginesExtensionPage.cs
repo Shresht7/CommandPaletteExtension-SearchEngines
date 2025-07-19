@@ -6,8 +6,9 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.CommandPalette.Extensions;
 using Microsoft.CommandPalette.Extensions.Toolkit;
+using System.Threading.Tasks;
 
-﻿namespace SearchEnginesExtension;
+namespace SearchEnginesExtension;
 
 /// <summary>
 /// The page that displays the search engines
@@ -27,7 +28,7 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
         Icon = Icons.WebSearch;
         Title = "Search Engines";
         Name = "Open";
-        Configuration.Load();
+        Task.Run(async () => await Configuration.Load());
     }
 
     /// <summary>
@@ -50,7 +51,7 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
                 {
                     Title = engine.Name,
                     Subtitle = $"Search using {engine.Name}",
-                    Icon = Icons.WebSearch,
+                    Icon = string.IsNullOrEmpty(engine.FaviconUrl) ? Icons.WebSearch : new IconInfo(engine.FaviconUrl),
                     Tags = [
                         new Tag($"!{engine.Shortcut}")
                     ]
@@ -124,7 +125,7 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
                 {
                     Title = engine.Name,
                     Subtitle = searchUrl,
-                    Icon = Icons.WebSearch,
+                    Icon = string.IsNullOrEmpty(engine.FaviconUrl) ? Icons.WebSearch : new IconInfo(engine.FaviconUrl),
                     Tags = [
                         new Tag($"!{engine.Shortcut}")
                     ]

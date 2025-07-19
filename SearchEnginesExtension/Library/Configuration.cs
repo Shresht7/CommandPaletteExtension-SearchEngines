@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace SearchEnginesExtension
 {
@@ -27,19 +28,21 @@ namespace SearchEnginesExtension
         /// A default collection of predefined search engines
         /// </summary>
         public static List<SearchEngine> SearchEngines = [
-                new SearchEngine { Name = "Google", Url = "https://www.google.com/search?q=%s", Shortcut = "google" },
-                new SearchEngine { Name = "Bing", Url = "https://www.bing.com/search?q=%s", Shortcut = "bing" },
-                new SearchEngine { Name = "GitHub", Url = "https://github.com/search?q=%s&ref=opensearch", Shortcut = "github" },
-                new SearchEngine { Name = "Mozilla Developer Network", Url = "https://developer.mozilla.org/en-US/search?q=%s", Shortcut = "mdn" },
-                new SearchEngine { Name = "YouTube", Url = "https://www.youtube.com/results?search_query=%s&page={startPage?}&utm_source=opensearch", Shortcut = "yt" },
-                new SearchEngine { Name = "Wikipedia", Url = "https://en.wikipedia.org/w/index.php?title=Special:Search&search=%s", Shortcut = "wikipedia" },
-                new SearchEngine { Name = "Wolfram Alpha", Url = "http://www.wolframalpha.com/input/?i=%s", Shortcut = "wolfram" },
+                new SearchEngine { Name = "Google", Url = "https://www.google.com/search?q=%s", Shortcut = "google", FaviconUrl = "https://www.google.com/favicon.ico" },
+                new SearchEngine { Name = "Bing", Url = "https://www.bing.com/search?q=%s", Shortcut = "bing", FaviconUrl = "https://www.bing.com/favicon.ico" },
+                new SearchEngine { Name = "GitHub", Url = "https://github.com/search?q=%s&ref=opensearch", Shortcut = "github", FaviconUrl = "https://github.com/favicon.ico" },
+                new SearchEngine { Name = "Mozilla Developer Network", Url = "https://developer.mozilla.org/en-US/search?q=%s", Shortcut = "mdn", FaviconUrl = "https://developer.mozilla.org/favicon.ico" },
+                new SearchEngine { Name = "YouTube", Url = "https://www.youtube.com/results?search_query=%s&page={startPage?}&utm_source=opensearch", Shortcut = "yt", FaviconUrl = "https://www.youtube.com/favicon.ico" },
+                new SearchEngine { Name = "Wikipedia", Url = "https://en.wikipedia.org/w/index.php?title=Special:Search&search=%s", Shortcut = "wikipedia", FaviconUrl = "https://en.wikipedia.org/favicon.ico" },
+                new SearchEngine { Name = "Wolfram Alpha", Url = "http://www.wolframalpha.com/input/?i=%s", Shortcut = "wolfram", FaviconUrl = "http://www.wolframalpha.com/favicon.ico" },
         ];
+
+        private static readonly HttpClient _httpClient = new HttpClient();
 
         /// <summary>
         /// Load the search engine configuration from the file
         /// </summary>
-        public static void Load()
+        public static async Task Load()
         {
             // Create the configuration directory if it does not exist
             string? directory = Path.GetDirectoryName(FilePath);
@@ -68,6 +71,48 @@ namespace SearchEnginesExtension
             if (jsonSearchEngines != null)
             {
                 SearchEngines = jsonSearchEngines;
+            }
+
+            // Look up favicons for engines that don't have one
+            foreach (var engine in SearchEngines)
+            {
+                if (string.IsNullOrEmpty(engine.FaviconUrl))
+                {
+                    engine.FaviconUrl = await GetFaviconUrlAsync(engine.Url);
+                }
+            }
+
+            // Save the updated configuration with favicons
+            Save();
+        }
+
+        /// <summary>
+        /// Attempts to find the favicon URL for a given search engine URL.
+        /// </summary>
+        /// <param name="engineUrl">The URL of the search engine.</param>
+        /// <returns>The favicon URL if found, otherwise null.</returns>
+        private static async Task<string?> GetFaviconUrlAsync(string engineUrl)
+        {
+            try
+            {
+                var uri = new Uri(engineUrl);
+                var baseUrl = uri.GetLeftPart(UriPartial.Authority);
+                var faviconUrl = new Uri(baseUrl + "/favicon.ico");
+
+                var response = await _httpClient.GetAsync(faviconUrl);
+                response.EnsureSuccessStatusCode(); // Throws an exception if the HTTP response status is an error code
+
+                return faviconUrl.ToString();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                Console.WriteLine($"HTTP request error fetching favicon for {engineUrl}: {httpEx.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching favicon for {engineUrl}: {ex.Message}");
+                return null;
             }
         }
 

@@ -29,6 +29,11 @@ namespace SearchEnginesExtension
         public required string Shortcut { get; set; }
 
         /// <summary>
+        /// Gets or sets the URL of the favicon for the search engine.
+        /// </summary>
+        public string? FaviconUrl { get; set; }
+
+        /// <summary>
         /// Generates the search url for the given query for this search engine
         /// </summary>
         /// <param name="query">The thing to search for</param>
