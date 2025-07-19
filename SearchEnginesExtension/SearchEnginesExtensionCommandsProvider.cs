@@ -20,6 +20,7 @@ public partial class SearchEnginesExtensionCommandsProvider : CommandProvider
             new CommandItem(new SearchEnginesExtensionPage())
             {
                 Title = DisplayName,
+                Subtitle = "Search the Web using Search Engines",
                 MoreCommands = [
                     new CommandContextItem(new OpenConfigurationCommand())
                 ]
