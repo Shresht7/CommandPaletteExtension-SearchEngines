@@ -2,9 +2,8 @@
 // The Microsoft Corporation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+using System.Collections.Generic;
 using Microsoft.CommandPalette.Extensions;
 using Microsoft.CommandPalette.Extensions.Toolkit;
 
@@ -76,37 +75,40 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
         // If the search text contains a shortcut, filter by the shortcut
         else if (newSearch.Contains('!'))
         {
-            // Find the shortcut in the search text (the word that starts with !)
-            var queryWords = newSearch.Split(' ');
-            var shortcutWord = queryWords.First(word => word.StartsWith('!'));
-            var shortcut = shortcutWord[1..];
-            var query = string.Join(" ", queryWords.Where(word => !word.Equals(shortcutWord, System.StringComparison.Ordinal)));
-
-            // Fuzzy search for the shortcut and order by the score
-            items = Configuration.SearchEngines
-                .Select(engine => (engine, score: System.Math.Max(StringMatcher.FuzzySearch(shortcut, engine.Shortcut).Score, StringMatcher.FuzzySearch(shortcut, engine.Name).Score)))
-                .Where(result => result.score > 0)
-                .OrderByDescending(result => result.score)
-                .Select(result =>
-                {
-                    // Create a new list item for the search engine
-                    var engine = result.engine;
-                    var searchUrl = engine.Search(query);
-                    return new ListItem(new OpenUrlCommand(searchUrl))
-                    {
-                        Title = engine.Name,
-                        Subtitle = searchUrl,
-                        Icon = Icons.WebSearch,
-                    };
-                }).ToList();
+            HandleShortcutSearch(newSearch);
         }
         // Otherwise, search all search engines
         else
         {
-            items = Configuration.SearchEngines.Select(engine =>
+            HandleGeneralSearch(newSearch);
+        }
+
+        // Raise the items changed event (This notifies CmdPal that the DynamicList has changed)
+        RaiseItemsChanged(items.Count);
+    }
+
+    /// <summary>
+    /// Handles the search when a shortcut is used.
+    /// </summary>
+    /// <param name="newSearch">The new search text.</param>
+    private void HandleShortcutSearch(string newSearch)
+    {
+        // Find the shortcut in the search text (the word that starts with !)
+        var queryWords = newSearch.Split(' ');
+        var shortcutWord = queryWords.First(word => word.StartsWith('!'));
+        var shortcut = shortcutWord[1..];
+        var query = string.Join(" ", queryWords.Where(word => !word.Equals(shortcutWord, System.StringComparison.Ordinal)));
+
+        // Fuzzy search for the shortcut and order by the score
+        items = Configuration.SearchEngines
+            .Select(engine => (engine, score: System.Math.Max(StringMatcher.FuzzySearch(shortcut, engine.Shortcut).Score, StringMatcher.FuzzySearch(shortcut, engine.Name).Score)))
+            .Where(result => result.score > 0)
+            .OrderByDescending(result => result.score)
+            .Select(result =>
             {
                 // Create a new list item for the search engine
-                var searchUrl = engine.Search(newSearch);
+                var engine = result.engine;
+                var searchUrl = engine.Search(query);
                 return new ListItem(new OpenUrlCommand(searchUrl))
                 {
                     Title = engine.Name,
@@ -114,9 +116,24 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
                     Icon = Icons.WebSearch,
                 };
             }).ToList();
-        }
+    }
 
-        // Raise the items changed event (This notifies CmdPal that the DynamicList has changed)
-        RaiseItemsChanged(items.Count);
+    /// <summary>
+    /// Handles the search when no shortcut is used.
+    /// </summary>
+    /// <param name="newSearch">The new search text.</param>
+    private void HandleGeneralSearch(string newSearch)
+    {
+        items = Configuration.SearchEngines.Select(engine =>
+        {
+            // Create a new list item for the search engine
+            var searchUrl = engine.Search(newSearch);
+            return new ListItem(new OpenUrlCommand(searchUrl))
+            {
+                Title = engine.Name,
+                Subtitle = searchUrl,
+                Icon = Icons.WebSearch,
+            };
+        }).ToList();
     }
 }
