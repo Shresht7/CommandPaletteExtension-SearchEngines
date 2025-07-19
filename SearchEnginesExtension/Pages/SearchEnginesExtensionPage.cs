@@ -125,6 +125,9 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
                     Title = engine.Name,
                     Subtitle = searchUrl,
                     Icon = Icons.WebSearch,
+                    Tags = [
+                        new Tag($"!{engine.Shortcut}")
+                    ]
                 };
             })
             .ToList();
