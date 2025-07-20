@@ -24,7 +24,7 @@ namespace SearchEnginesExtension
         }
 
         public readonly TextSetting ConfigPath = new TextSetting(
-            "path",
+            nameof(ConfigPath),
             "ConfigPath",
             "Path to the Search Engines Configuration File",
             Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CommandPaletteExtension-SearchEngines", "SearchEngines.json")
