@@ -33,8 +33,13 @@ namespace SearchEnginesExtension
         public static IconInfo AddTo { get; } = new IconInfo("\uECC8");
 
         /// <summary>
-        /// Get the icon for edit
+        /// Gets the icon for edit
         /// </summary>
         public static IconInfo Edit { get; } = new IconInfo("\uE70F");
+
+        /// <summary>
+        /// Gets the icon for delete
+        /// </summary>
+        public static IconInfo Delete { get; } = new IconInfo("\uE74D");
     }
 }

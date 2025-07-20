@@ -61,6 +61,7 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
                     Tags = [new Tag($"!{engine.Shortcut}")],
                     MoreCommands = [
                         new CommandContextItem(new CreateEditFormPage(engine)),
+                        new CommandContextItem(new DeleteSearchEngineCommand(engine)),
                         new CommandContextItem(new ReloadConfigurationCommand()) { RequestedShortcut = new KeyChord() { Modifiers = VirtualKeyModifiers.Control, Vkey = 'R' } },
                     ]
                 };
@@ -160,6 +161,7 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
                     Tags = [new Tag($"!{engine.Shortcut}")],
                     MoreCommands = [
                         new CommandContextItem(new CreateEditFormPage(engine)),
+                        new CommandContextItem(new DeleteSearchEngineCommand(engine)),
                         new CommandContextItem(new ReloadConfigurationCommand()) { RequestedShortcut = new KeyChord() { Modifiers = VirtualKeyModifiers.Control, Vkey = 'R' } },
                     ]
                 };

@@ -66,7 +66,7 @@ namespace SearchEnginesExtension
                     Console.WriteLine($"Error creating configuration file: {ex.Message}");
                 }
             }
-            
+
             // Read the JSON file and deserialize it into a list of SearchEngine objects
             string contents = File.ReadAllText(FilePath);
             var jsonSearchEngines = JsonSerializer.Deserialize(contents, SearchEngineJsonSearializerContext.Default.ListSearchEngine);
@@ -186,6 +186,19 @@ namespace SearchEnginesExtension
             }
             // Save the updated configuration
             Save();
+        }
+
+        public static bool Remove(SearchEngine engine)
+        {
+            // Find the search engine by URL
+            var existingEngine = SearchEngines.First(e => e.Url.Equals(engine.Url, StringComparison.OrdinalIgnoreCase));
+            if (existingEngine == null)
+            {
+                return false;
+            }
+
+            // Remove the search engine from the list
+            return SearchEngines.Remove(existingEngine);
         }
     }
 }
