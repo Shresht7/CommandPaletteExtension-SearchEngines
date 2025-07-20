@@ -12,6 +12,7 @@ using Microsoft.CommandPalette.Extensions;
 using Microsoft.CommandPalette.Extensions.Toolkit;
 
 using SearchEnginesExtension.Commands;
+using SearchEnginesExtension.Pages;
 
 namespace SearchEnginesExtension;
 
@@ -59,6 +60,7 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
                     Icon = string.IsNullOrEmpty(engine.FaviconUrl) ? Icons.WebSearch : new IconInfo(engine.FaviconUrl),
                     Tags = [new Tag($"!{engine.Shortcut}")],
                     MoreCommands = [
+                        new CommandContextItem(new CreateEditFormPage(engine)),
                         new CommandContextItem(new ReloadConfigurationCommand()) { RequestedShortcut = new KeyChord() { Modifiers = VirtualKeyModifiers.Control, Vkey = 'R' } },
                     ]
                 };
@@ -157,6 +159,7 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
                     Icon = string.IsNullOrEmpty(engine.FaviconUrl) ? Icons.WebSearch : new IconInfo(engine.FaviconUrl),
                     Tags = [new Tag($"!{engine.Shortcut}")],
                     MoreCommands = [
+                        new CommandContextItem(new CreateEditFormPage(engine)),
                         new CommandContextItem(new ReloadConfigurationCommand()) { RequestedShortcut = new KeyChord() { Modifiers = VirtualKeyModifiers.Control, Vkey = 'R' } },
                     ]
                 };

@@ -5,6 +5,7 @@
 using Microsoft.CommandPalette.Extensions;
 using Microsoft.CommandPalette.Extensions.Toolkit;
 using SearchEnginesExtension.Commands;
+using SearchEnginesExtension.Pages;
 using Windows.System;
 
 namespace SearchEnginesExtension;
@@ -24,6 +25,7 @@ public partial class SearchEnginesExtensionCommandsProvider : CommandProvider
                 Title = DisplayName,
                 Subtitle = "Search the Web using Search Engines",
                 MoreCommands = [
+                    new CommandContextItem(new CreateEditFormPage(null)),
                     new CommandContextItem(new ReloadConfigurationCommand()) { RequestedShortcut = new KeyChord() { Modifiers = VirtualKeyModifiers.Control, Vkey = 'R' } }
                 ]
             },

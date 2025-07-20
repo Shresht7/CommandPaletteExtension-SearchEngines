@@ -163,5 +163,29 @@ namespace SearchEnginesExtension
                 Console.WriteLine($"Error saving configuration file: {ex.Message}");
             }
         }
+
+        /// <summary>
+        /// Inserts or updates a search engine in the configuration
+        /// </summary>
+        /// <param name="engine">The search engine to create or update</param>
+        public static void Upsert(SearchEngine engine)
+        {
+            // Check if the engine already exists
+            var existingEngine = SearchEngines.FirstOrDefault(e => e.Url.Equals(engine.Url, StringComparison.OrdinalIgnoreCase));
+            if (existingEngine != null)
+            {
+                // Update the existing engine
+                existingEngine.Name = engine.Name;
+                existingEngine.Url = engine.Url;
+                existingEngine.FaviconUrl = engine.FaviconUrl;
+            }
+            else
+            {
+                // Add the new engine
+                SearchEngines.Add(engine);
+            }
+            // Save the updated configuration
+            Save();
+        }
     }
 }

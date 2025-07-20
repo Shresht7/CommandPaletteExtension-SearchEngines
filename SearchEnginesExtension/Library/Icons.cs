@@ -26,5 +26,15 @@ namespace SearchEnginesExtension
         /// Gets the icon for refresh
         /// </summary>
         public static IconInfo Refresh { get; } = new IconInfo("\uE72C");
+
+        /// <summary>
+        /// Gets the icon for add/create
+        /// </summary>
+        public static IconInfo AddTo { get; } = new IconInfo("\uECC8");
+
+        /// <summary>
+        /// Get the icon for edit
+        /// </summary>
+        public static IconInfo Edit { get; } = new IconInfo("\uE70F");
     }
 }
