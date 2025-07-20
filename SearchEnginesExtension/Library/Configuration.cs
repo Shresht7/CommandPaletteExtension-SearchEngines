@@ -188,17 +188,13 @@ namespace SearchEnginesExtension
             Save();
         }
 
+        /// <summary>
+        /// Removes the search engine from the configuration
+        /// </summary>
         public static bool Remove(SearchEngine engine)
         {
-            // Find the search engine by URL
-            var existingEngine = SearchEngines.First(e => e.Url.Equals(engine.Url, StringComparison.OrdinalIgnoreCase));
-            if (existingEngine == null)
-            {
-                return false;
-            }
-
-            // Remove the search engine from the list
-            return SearchEngines.Remove(existingEngine);
+            var n = SearchEngines.RemoveAll(e => e.Url.Equals(engine.Url, StringComparison.OrdinalIgnoreCase));
+            return n != 0;
         }
     }
 }
