@@ -11,15 +11,15 @@
 
 ## 🌟 Features
 
--   **Search Ranking:** The extension uses fuzzy matching to rank search engines based on your query. It matches against both the engine's name and its shortcut, providing more relevant results.
+- **Search Ranking:** The extension uses fuzzy matching to rank search engines based on your query. It matches against both the engine's name and its shortcut, providing more relevant results.
 
--   **Flexible Shortcut Usage:** You can use search engine shortcuts (e.g., `!g` for Google) anywhere within your search query. The extension automatically detects and uses the shortcut to prioritize the relevant search engine.
+- **Flexible Shortcut Usage:** You can use search engine shortcuts (e.g., `!g` for Google) anywhere within your search query. The extension automatically detects and uses the shortcut to prioritize the relevant search engine.
 
--   **Favicon Support:** Search results display favicons for each search engine. The extension attempts to automatically discover favicons if they are not explicitly defined in the configuration.
+- **Custom Query Parameters:** Add custom query parameters to your searches using the `&key=value` or `&key` (for flags) syntax directly in your query (e.g., `!gh my search &language=rust &type=repositories`).
 
--   **Custom Query Parameters:** Add custom query parameters to your searches using the `&key=value` or `&key` (for flags) syntax directly in your query (e.g., `!gh my search &language=rust &type=repositories`).
+- **Favicon Support:** Search results display favicons for each search engine. The extension attempts to automatically discover favicons if they are not explicitly defined in the configuration.
 
--   **Easy Configuration Access:** A subcommand, "Open Configuration File," is available from the main "Search Engines" command. This allows you to quickly open the `SearchEngines.json` configuration file for edits.
+- **Easy Config Management:** Create, edit and delete search engines directly from the Command Palette.
 
 ## 📖 Usage
 
@@ -35,11 +35,11 @@
 
 Search engines are configured in the `SearchEngines.json` file, located in `%LOCALAPPDATA%\CommandPaletteExtension-SearchEngines\`.
 
->[!TIP]
-> You can change the path of the configuration file in: `SearchEngines.jsonPowerToys Command Palette Settings` > `Extensions` > `Search Engines`
+You can of course, create, update or delete search engines from CommandPalette itself.
 
 > [!TIP]
-> To reload the configuration after making changes, you can use the "Reload Configuration" subcommand or press `Ctrl+R` when the "Search Engines" command is active.
+> - You can change the path of the configuration file in: `SearchEngines.jsonPowerToys Command Palette Settings` > `Extensions` > `Search Engines`
+> - To reload the configuration after making changes, you can use the "Reload Configuration" subcommand or press `Ctrl+R` when the "Search Engines" command is active.
 
 ---
 
