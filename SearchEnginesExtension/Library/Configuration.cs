@@ -184,8 +184,6 @@ namespace SearchEnginesExtension
                 // Add the new engine
                 SearchEngines.Add(engine);
             }
-            // Save the updated configuration
-            Save();
         }
 
         /// <summary>
