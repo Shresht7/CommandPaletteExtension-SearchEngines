@@ -24,7 +24,6 @@ public partial class SearchEnginesExtensionCommandsProvider : CommandProvider
                 Title = DisplayName,
                 Subtitle = "Search the Web using Search Engines",
                 MoreCommands = [
-                    new CommandContextItem(new OpenConfigurationCommand()),
                     new CommandContextItem(new ReloadConfigurationCommand()) { RequestedShortcut = new KeyChord() { Modifiers = VirtualKeyModifiers.Control, Vkey = 'R' } }
                 ]
             },
