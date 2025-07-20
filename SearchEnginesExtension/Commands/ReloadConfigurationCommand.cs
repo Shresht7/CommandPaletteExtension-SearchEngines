@@ -7,7 +7,7 @@ using Windows.System;
 namespace SearchEnginesExtension.Commands
 {
     /// <summary>
-    /// Command to reload the search engine configuration.
+    /// Command to reload the search engine configuration
     /// </summary>
     internal partial class ReloadConfigurationCommand : InvokableCommand
     {
@@ -32,9 +32,8 @@ namespace SearchEnginesExtension.Commands
                 Task.Run(async () => await Configuration.Load());
                 return CommandResult.ShowToast("Search Engines Configuration Reloaded");
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"Error reloading configuration: {ex.Message}");
                 return CommandResult.ShowToast("Error Reloading Configuration");
             }
         }

@@ -2,12 +2,16 @@
 // The Microsoft Corporation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Windows.System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+
 using Microsoft.CommandPalette.Extensions;
 using Microsoft.CommandPalette.Extensions.Toolkit;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
+
+using SearchEnginesExtension.Commands;
 
 namespace SearchEnginesExtension;
 
@@ -53,7 +57,10 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
                     Title = engine.Name,
                     Subtitle = $"Search using {engine.Name}",
                     Icon = string.IsNullOrEmpty(engine.FaviconUrl) ? Icons.WebSearch : new IconInfo(engine.FaviconUrl),
-                    Tags = [new Tag($"!{engine.Shortcut}")]
+                    Tags = [new Tag($"!{engine.Shortcut}")],
+                    MoreCommands = [
+                        new CommandContextItem(new ReloadConfigurationCommand()) { RequestedShortcut = new KeyChord() { Modifiers = VirtualKeyModifiers.Control, Vkey = 'R' } },
+                    ]
                 };
             }).ToArray();
         }
@@ -148,7 +155,10 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
                     Title = engine.Name,
                     Subtitle = searchUrl,
                     Icon = string.IsNullOrEmpty(engine.FaviconUrl) ? Icons.WebSearch : new IconInfo(engine.FaviconUrl),
-                    Tags = [new Tag($"!{engine.Shortcut}")]
+                    Tags = [new Tag($"!{engine.Shortcut}")],
+                    MoreCommands = [
+                        new CommandContextItem(new ReloadConfigurationCommand()) { RequestedShortcut = new KeyChord() { Modifiers = VirtualKeyModifiers.Control, Vkey = 'R' } },
+                    ]
                 };
             })
             .ToList();
