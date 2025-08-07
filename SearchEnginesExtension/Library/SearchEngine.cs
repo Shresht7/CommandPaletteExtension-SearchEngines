@@ -67,8 +67,17 @@ namespace SearchEnginesExtension
         /// <returns>A correctly formed homepage URL.</returns>
         public string GetHomepageUrl()
         {
-            var uriBuilder = new UriBuilder(Url);
-            return $"https://{uriBuilder.Host}";
+            try
+            {
+                var uri = new Uri(Url);
+                return uri.GetLeftPart(UriPartial.Authority);
+            }
+            catch (UriFormatException)
+            {
+                // If the URL is somehow invalid, return an empty string
+                // to avoid crashing the application.
+                return string.Empty;
+            }
         }
     }
 
