@@ -53,7 +53,7 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
         {
             return Configuration.SearchEngines.ConvertAll(engine => {
                 string homeUrl = engine.GetHomepageUrl();
-                return new ListItem(new OpenUrlCommand(homeUrl))
+                return new ListItem(new OpenUrlCommand(homeUrl) { Result = CommandResult.Dismiss() })
                 {
                     Title = engine.Name,
                     Subtitle = $"Search using {engine.Name}",
@@ -153,7 +153,7 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
             {
                 var (engine, _, query, paramsDict) = result;
                 var searchUrl = engine.Search(query, paramsDict);
-                return new ListItem(new OpenUrlCommand(searchUrl))
+                return new ListItem(new OpenUrlCommand(searchUrl) { Result = CommandResult.Dismiss() })
                 {
                     Title = engine.Name,
                     Subtitle = searchUrl,
@@ -163,7 +163,7 @@ internal sealed partial class SearchEnginesExtensionPage : DynamicListPage
                         new CommandContextItem(new CreateEditFormPage(engine)),
                         new CommandContextItem(new DeleteSearchEngineCommand(engine)),
                         new CommandContextItem(new ReloadConfigurationCommand()) { RequestedShortcut = new KeyChord() { Modifiers = VirtualKeyModifiers.Control, Vkey = 'R' } },
-                    ]
+                    ],
                 };
             })
             .ToList();
