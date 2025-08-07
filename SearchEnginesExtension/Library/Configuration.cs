@@ -113,7 +113,7 @@ namespace SearchEnginesExtension
                 var uri = new Uri(engineUrl);
                 var baseUrl = uri.GetLeftPart(UriPartial.Authority);
 
-                // Try favicon.ico first
+                // 1. Check for favicon.ico
                 var faviconIcoUrl = new Uri(baseUrl + "/favicon.ico");
                 try
                 {
@@ -121,27 +121,51 @@ namespace SearchEnginesExtension
                     response.EnsureSuccessStatusCode();
                     return faviconIcoUrl.ToString();
                 }
-                catch (HttpRequestException) { /* Ignore and try parsing HTML */ }
+                catch (HttpRequestException) { /* Ignore and continue */ }
 
-                // If favicon.ico not found, parse HTML
+                // 2. Fetch homepage
                 var htmlResponse = await _httpClient.GetAsync(baseUrl);
                 htmlResponse.EnsureSuccessStatusCode();
                 var htmlContent = await htmlResponse.Content.ReadAsStringAsync();
 
-                // Regex to find link tags for icons
-                var regex = new Regex("<link\\s+[^>]*rel=\"(?:icon|shortcut icon)\"[^>]*href=\"([^\"]*)\"[^>]*>", RegexOptions.IgnoreCase);
-                var match = regex.Match(htmlContent);
+                // 3. Regex to find all relevant link tags
+                var regex = new Regex("<link\\s+[^>]*rel=[\"'](apple-touch-icon|icon|shortcut icon)[\"'][^>]*href=[\"']([^\"']*)[\"'][^>]*>", RegexOptions.IgnoreCase);
+                var matches = regex.Matches(htmlContent);
 
-                if (match.Success)
+                if (matches.Count > 0)
                 {
-                    var faviconPath = match.Groups[1].Value;
+                    // 4. Prioritize and select the best icon
+                    string? appleIcon = null;
+                    string? standardIcon = null;
+
+                    foreach (Match match in matches)
+                    {
+                        var rel = match.Groups[1].Value;
+                        var href = match.Groups[2].Value;
+
+                        if (rel.Equals("apple-touch-icon", StringComparison.OrdinalIgnoreCase))
+                        {
+                            appleIcon = href;
+                        }
+                        else
+                        {
+                            standardIcon = href;
+                        }
+                    }
+
+                    var faviconPath = appleIcon ?? standardIcon;
+
+                    // 5. Resolve the URL
                     if (Uri.IsWellFormedUriString(faviconPath, UriKind.Absolute))
                     {
                         return faviconPath;
                     }
+                    else if (faviconPath != null && faviconPath.StartsWith("//", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return $"https:{faviconPath}";
+                    }
                     else
                     {
-                        // Handle relative URLs
                         return new Uri(new Uri(baseUrl), faviconPath).ToString();
                     }
                 }
