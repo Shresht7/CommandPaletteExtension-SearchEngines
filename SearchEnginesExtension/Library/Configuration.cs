@@ -46,34 +46,47 @@ namespace SearchEnginesExtension
         /// </summary>
         public static async Task Load()
         {
-            // Create the configuration directory if it does not exist
-            string? directory = Path.GetDirectoryName(FilePath);
-            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            try
             {
-                Directory.CreateDirectory(directory);
-            }
+                // Create the configuration directory if it does not exist
+                string? directory = Path.GetDirectoryName(FilePath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
 
-            // If the file does not exist, create it and return the predefined search engines
-            if (!File.Exists(FilePath))
-            {
-                try
+                // If the file does not exist, create it and return the predefined search engines
+                if (!File.Exists(FilePath))
                 {
                     string json = JsonSerializer.Serialize(SearchEngines, SearchEngineJsonSearializerContext.Default.ListSearchEngine);
-                    File.WriteAllText(FilePath, json);
+                    await File.WriteAllTextAsync(FilePath, json);
                 }
-                catch (Exception ex)
+
+                // Read the JSON file and deserialize it into a list of SearchEngine objects
+                string contents = await File.ReadAllTextAsync(FilePath);
+                var jsonSearchEngines = JsonSerializer.Deserialize(contents, SearchEngineJsonSearializerContext.Default.ListSearchEngine);
+                if (jsonSearchEngines != null)
                 {
-                    Console.WriteLine($"Error creating configuration file: {ex.Message}");
+                    SearchEngines = jsonSearchEngines;
                 }
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"Error reading or parsing configuration file: {ex.Message}");
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine($"Error accessing configuration file: {ex.Message}");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine($"Permission denied accessing configuration file: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An unexpected error occurred during configuration load: {ex.Message}");
             }
 
-            // Read the JSON file and deserialize it into a list of SearchEngine objects
-            string contents = File.ReadAllText(FilePath);
-            var jsonSearchEngines = JsonSerializer.Deserialize(contents, SearchEngineJsonSearializerContext.Default.ListSearchEngine);
-            if (jsonSearchEngines != null)
-            {
-                SearchEngines = jsonSearchEngines;
-            }
 
             // Look up favicons for engines that don't have one
             foreach (var engine in SearchEngines)
@@ -85,7 +98,7 @@ namespace SearchEnginesExtension
             }
 
             // Save the updated configuration with favicons
-            Save();
+            await SaveAsync();
         }
 
         /// <summary>
@@ -150,17 +163,34 @@ namespace SearchEnginesExtension
         /// <summary>
         /// Save the search engine configuration file to the disk
         /// </summary>
-        public static void Save()
+        public static void Save() => SaveAsync().GetAwaiter().GetResult();
+
+        /// <summary>
+        /// Save the search engine configuration file to the disk
+        /// </summary>
+        public static async Task SaveAsync()
         {
             try
             {
                 // Serialize the list of search engines to JSON and write it to the file
                 string json = JsonSerializer.Serialize(SearchEngines, SearchEngineJsonSearializerContext.Default.ListSearchEngine);
-                File.WriteAllText(FilePath, json);
+                await File.WriteAllTextAsync(FilePath, json);
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"Error serializing configuration: {ex.Message}");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine($"Error: Access to path '{FilePath}' is denied. {ex.Message}");
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine($"Error writing to file '{FilePath}'. {ex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error saving configuration file: {ex.Message}");
+                Console.WriteLine($"An unexpected error occurred while saving the configuration: {ex.Message}");
             }
         }
 
