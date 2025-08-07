@@ -31,8 +31,12 @@ namespace SearchEnginesExtension.Pages
 
     internal sealed partial class CreateEditForm : FormContent
     {
+        private readonly SearchEngine? _originalEngine;
+
         public CreateEditForm(SearchEngine? engine)
         {
+            _originalEngine = engine;
+
             TemplateJson = $$"""
             {
                  "type": "AdaptiveCard",
@@ -122,15 +126,28 @@ namespace SearchEnginesExtension.Pages
                 FaviconUrl = favicon
             };
 
-            // Add the new search engine to the configuration
-            Configuration.Upsert(newEngine);
+            bool success;
+            if (_originalEngine == null)
+            {
+                success = Configuration.Add(newEngine);
+            }
+            else
+            {
+                success = Configuration.Update(_originalEngine, newEngine);
+            }
 
-            // Save the configuration
-            Configuration.Save();
+            if (success)
+            {
+                // Save the configuration
+                Configuration.Save();
 
-            // Show a success message
-            return CommandResult.ShowToast($"Search Engine '{name}' has been created successfully");
-
+                // Show a success message
+                return CommandResult.ShowToast($"Search Engine '{name}' has been saved successfully");
+            }
+            else
+            {
+                return CommandResult.ShowToast("Failed to save search engine. A duplicate URL or shortcut may exist.");
+            }
         }
     }
 

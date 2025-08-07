@@ -222,22 +222,46 @@ namespace SearchEnginesExtension
         /// Inserts or updates a search engine in the configuration
         /// </summary>
         /// <param name="engine">The search engine to create or update</param>
-        public static void Upsert(SearchEngine engine)
+        public static bool Add(SearchEngine engine)
         {
-            // Check if the engine already exists
-            var existingEngine = SearchEngines.FirstOrDefault(e => e.Url.Equals(engine.Url, StringComparison.OrdinalIgnoreCase));
-            if (existingEngine != null)
+            // Prevent duplicates based on URL or Shortcut
+            if (SearchEngines.Any(e => e.Url.Equals(engine.Url, StringComparison.OrdinalIgnoreCase) ||
+                                       e.Shortcut.Equals(engine.Shortcut, StringComparison.OrdinalIgnoreCase)))
             {
-                // Update the existing engine
-                existingEngine.Name = engine.Name;
-                existingEngine.Url = engine.Url;
-                existingEngine.FaviconUrl = engine.FaviconUrl;
+                return false; // Duplicate found
             }
-            else
+
+            SearchEngines.Add(engine);
+            return true;
+        }
+
+        /// <summary>
+        /// Updates an existing search engine.
+        /// </summary>
+        /// <returns>True if successful, false if the new shortcut or URL conflicts with another existing engine.</returns>
+        public static bool Update(SearchEngine originalEngine, SearchEngine updatedEngine)
+        {
+            var existingEngine = SearchEngines.FirstOrDefault(e => e.Url.Equals(originalEngine.Url, StringComparison.OrdinalIgnoreCase));
+            if (existingEngine == null)
             {
-                // Add the new engine
-                SearchEngines.Add(engine);
+                return false; // Original engine not found
             }
+
+            // Check if the new URL or shortcut conflicts with any *other* engine
+            if (SearchEngines.Any(e => (e.Url.Equals(updatedEngine.Url, StringComparison.OrdinalIgnoreCase) ||
+                                       e.Shortcut.Equals(updatedEngine.Shortcut, StringComparison.OrdinalIgnoreCase)) &&
+                                       e != existingEngine))
+            {
+                return false; // Conflict found
+            }
+
+            // Update the properties
+            existingEngine.Name = updatedEngine.Name;
+            existingEngine.Url = updatedEngine.Url;
+            existingEngine.Shortcut = updatedEngine.Shortcut;
+            existingEngine.FaviconUrl = updatedEngine.FaviconUrl;
+
+            return true;
         }
 
         /// <summary>
